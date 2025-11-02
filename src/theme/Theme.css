@@ -1,0 +1,36 @@
+:root {
+  /* 🎨 Base Colors */
+  --color-primary: #0a413b; /* Deep greenish-blue */
+  --color-accent: #bf9951; /* Golden accent */
+  --color-background: #f4efea; /* Light creamy background */
+
+  /* 🌗 Optional Shades */
+  --color-primary-light: #12685d;
+  --color-primary-dark: #062d28;
+  --color-accent-light: #d9b874;
+  --color-accent-dark: #9b7d3f;
+  --color-text: #1a1a1a;
+  --color-text-light: #fafafa;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  overflow-x: hidden;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+header {
+  background: var(--color-primary);
+  color: var(--color-text-light);
+}
+
+button {
+  background: var(--color-accent);
+  color: var(--color-text-light);
+}

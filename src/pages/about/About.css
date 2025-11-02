@@ -1,0 +1,42 @@
+.about-page {
+  height: 90vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
+/* Hide scrollbar visually */
+.about-page::-webkit-scrollbar {
+  display: none;
+}
+.about-page {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.section {
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  scroll-snap-align: start;
+  text-align: center;
+  background: var(--color-background);
+  color: var(--color-primary);
+  padding: 40px;
+  border-bottom: 2px solid var(--color-accent);
+  background: #fffaf3;
+}
+
+.section h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  color: var(--color-accent);
+}
+
+.section p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  max-width: 700px;
+}

@@ -1,0 +1,94 @@
+:root {
+  --color-primary: #0a413b;
+  --color-accent: #bf9951;
+  --color-background: #f4efea;
+  --color-text: #1a1a1a;
+  --color-text-light: #ffffff;
+}
+
+/* ===== HEADER ===== */
+.header {
+  background-color: var(--color-primary);
+  padding: 15px 0;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+.header-container {
+  display: flex;
+  padding: 0px 20px;
+  align-items: center;
+  /* width: ; */
+  justify-content: space-between;
+}
+
+/* ===== LOGO ===== */
+.logo img {
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.2));
+  transition: transform 0.3s ease;
+}
+
+.logo:hover img {
+  transform: scale(1.05);
+}
+
+/* ===== NAVIGATION ===== */
+.nav-links {
+  display: flex;
+  gap: 25px;
+}
+
+.nav-link {
+  position: relative;
+  padding: 10px 18px;
+  color: var(--color-background);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+/* Hover underline animation */
+.nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background-color: var(--color-accent);
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.nav-link.active {
+  color: var(--color-accent);
+}
+
+.nav-link.active::after {
+  width: 100%;
+}
+
+/* ===== CONTACT BUTTON ===== */
+.contact-btn {
+  padding: 10px 20px;
+  background-color: var(--color-accent);
+  color: var(--color-text-light);
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.contact-btn:hover {
+  background-color: #d9b568;
+  transform: translateY(-2px);
+}
+
+.contact-btn.active {
+  background-color: #e0c27a;
+  color: var(--color-primary);
+}
