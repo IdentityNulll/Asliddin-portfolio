@@ -10,6 +10,8 @@ export default function Projects() {
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
       <h1>Welcome to Projects Page</h1>
+      <section className="section"></section>
+      <section className="section"></section>
     </motion.div>
   );
 }

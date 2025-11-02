@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import "./Home.css";
 import AsliddinArt from "../../assets/asliddin.jpg"
+import { Link } from "react-router-dom";
 
 export default function Home() {
   return (
@@ -20,10 +21,10 @@ export default function Home() {
             marketing yo‘nalishida yangi maqsadlarga intilmoqda. Uning har bir
             loyihasi — bu nafaqat hunar, balki kelajak uchun dadil qadamdir.
           </p>
-          <button className="explore-btn">Explore My Work</button>
+          <Link to="/projects" className="explore-btn">Explore My Work</Link>
         </div>
 
-        <div className="portrait">
+        <div className="portrait">  
           <img
             src={AsliddinArt}
             alt="Hoshimov Asilbek"

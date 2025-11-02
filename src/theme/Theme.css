@@ -25,6 +25,11 @@ body {
   margin: 0 auto;
 }
 
+Link, li,a  { 
+    text-decoration: none;
+    list-style: none;
+}
+
 header {
   background: var(--color-primary);
   color: var(--color-text-light);
