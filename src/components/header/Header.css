@@ -29,9 +29,9 @@
   transition: transform 0.3s ease;
 }
 
-.logo:hover img {
+/* .logo:hover img {
   transform: scale(1.05);
-}
+} */
 
 /* ===== NAVIGATION ===== */
 .nav-links {
@@ -83,10 +83,6 @@
   transition: all 0.3s ease;
 }
 
-.contact-btn:hover {
-  background-color: #d9b568;
-  transform: translateY(-2px);
-}
 
 .contact-btn.active {
   background-color: #e0c27a;

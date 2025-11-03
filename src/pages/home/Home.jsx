@@ -5,13 +5,6 @@ import { Link } from "react-router-dom";
 
 export default function Home() {
   return (
-    <motion.div
-      className="page home"
-      initial={{ opacity: 0, x: 100 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -100 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-    >
       <div className="home-container">
         <div className="intro">
           <h1>Hoshimov Asilbek</h1>
@@ -32,6 +25,5 @@ export default function Home() {
           />
         </div>
       </div>
-    </motion.div>
   );
 }

@@ -35,7 +35,7 @@ export default function Header() {
         {/* Contact Button */}
         <Link
           to="/contact"
-          className={`nav-link contact-btn ${pathname === "/contact" ? "active" : ""}`}
+          className={`contact-btn ${pathname === "/contact" ? "active" : ""}`}
         >
           Contact
         </Link>

@@ -1,17 +1,11 @@
 import { motion } from "framer-motion";
+import { div } from "framer-motion/client";
 
 export default function Projects() {
   return (
-    <motion.div
-      className="page"
-      initial={{ opacity: 0, x: 100 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -100 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-    >
+    <div>
       <h1>Welcome to Projects Page</h1>
       <section className="section"></section>
-      <section className="section"></section>
-    </motion.div>
+    </div>
   );
 }
