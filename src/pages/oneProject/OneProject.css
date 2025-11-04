@@ -1,5 +1,5 @@
 .one-project {
-  min-height: 100vh;
+  /* min-height: 100vh; */
   background-color: var(--color-background);
   padding: 60px 20px;
   display: flex;
