@@ -14,29 +14,28 @@
   top: 0;
   z-index: 50;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-}
-.header-container {
-  display: flex;
-  padding: 0px 20px;
-  align-items: center;
-  /* width: ; */
-  justify-content: space-between;
+  backdrop-filter: blur(6px);
 }
 
-/* ===== LOGO ===== */
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
 .logo img {
   filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.2));
   transition: transform 0.3s ease;
 }
 
-/* .logo:hover img {
-  transform: scale(1.05);
-} */
-
-/* ===== NAVIGATION ===== */
 .nav-links {
   display: flex;
+  align-items: center;
   gap: 25px;
+  transition: all 0.4s ease;
 }
 
 .nav-link {
@@ -81,10 +80,71 @@
   font-weight: 600;
   text-decoration: none;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
+.contact-btn:hover {
+  background-color: var(--color-accent-dark);
+  transform: translateY(-2px);
+}
 
 .contact-btn.active {
   background-color: #e0c27a;
   color: var(--color-primary);
+}
+
+/* ===== MOBILE MENU TOGGLE ===== */
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--color-background);
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.menu-toggle:hover {
+  transform: scale(1.1);
+}
+
+/* ===== MEDIA QUERIES ===== */
+@media (max-width: 850px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 70px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background-color: var(--color-primary);
+    text-align: center;
+    padding: 20px 0;
+    gap: 20px;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .nav-links.open {
+    max-height: 300px;
+    opacity: 1;
+    visibility: visible;
+    transition: all 0.4s ease;
+  }
+
+  .nav-link,
+  .contact-btn {
+    width: 100%;
+    padding: 12px 0;
+  }
+
+  .contact-btn {
+    border-radius: 0;
+  }
 }
