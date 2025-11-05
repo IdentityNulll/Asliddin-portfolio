@@ -22,7 +22,7 @@ export default function Header() {
           <img
             src={AsliddinArt}
             alt="Asliddin Logo"
-            width={180}
+            width={220}
             height={50}
             loading="lazy"
           />

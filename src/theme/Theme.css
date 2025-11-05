@@ -23,6 +23,7 @@ body {
   width: 100%;
   max-width: 1500px;
   margin: 0 auto;
+  font-family: "Gilroy";
 }
 
 Link, li,a  { 
@@ -38,4 +39,10 @@ header {
 button {
   background: var(--color-accent);
   color: var(--color-text-light);
+}
+
+@font-face {
+  font-family: "Gilroy";
+  src: url("../assets/fonts/Gilroy-Light.otf");
+  font-weight: 400;
 }
