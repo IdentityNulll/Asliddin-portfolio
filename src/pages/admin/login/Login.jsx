@@ -1,14 +1,33 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Login.css";
+import api from "../../../api/axios";
 
 function Login() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate(); // 👈 useNavigate hook
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Logging in:", { username, password });
-    // TODO: call backend API to login
+    try {
+      const res = await api.post("/users/login", {
+        email,
+        password,
+      });
+      
+      // Save token in localStorage
+      localStorage.setItem("token", res.data.token);
+
+      // Show success alert (optional)
+      alert("Logged in successfully!");
+
+      // Redirect to home page
+      navigate("/"); // 👈 redirects to Home.jsx
+    } catch (err) {
+      console.error(err);
+      alert("Login failed");
+    }
   };
 
   return (
@@ -16,12 +35,12 @@ function Login() {
       <form className="login-form" onSubmit={handleSubmit}>
         <h2>Admin Login</h2>
         <label>
-          Username
+          Email
           <input
             type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Enter username"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter email"
             required
           />
         </label>
