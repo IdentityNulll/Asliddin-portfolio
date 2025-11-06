@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Edit2 } from "lucide-react";
 import api from "../../api/axios";
+import aslidin from "../../assets/asliddin.jpg";
 
 export default function Home() {
   const [homeData, setHomeData] = useState(null); // start as null
@@ -23,6 +24,7 @@ export default function Home() {
     try {
       const res = await api.get("/home");
       setHomeData(res.data);
+
       setEditForm({
         title: res.data.title,
         description: res.data.description,
@@ -72,7 +74,7 @@ export default function Home() {
     }
   };
 
-  if (!homeData) return null; // don't render anything until data is loaded
+  if (!homeData) return null; 
 
   return (
     <div className="home-container">
@@ -130,7 +132,7 @@ export default function Home() {
           src={
             homeData.image
               ? `http://localhost:4765/uploads/${homeData.image}`
-              : ""
+              : aslidin
           }
           alt={homeData.title}
           className="hero-image"
