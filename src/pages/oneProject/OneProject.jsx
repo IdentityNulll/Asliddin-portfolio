@@ -107,7 +107,8 @@ export default function OneProject() {
     }
   };
 
-  const getImageUrl = (filename) => `http://localhost:4765${filename}`;
+  const getImageUrl = (filename) =>
+    `https://asliddin.identitynull.uz${filename}`;
 
   if (!project) return <p>Loading...</p>;
 
