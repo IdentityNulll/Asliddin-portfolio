@@ -131,7 +131,7 @@ export default function Home() {
         <motion.img
           src={
             homeData.image
-              ? `http://localhost:4765/uploads/${homeData.image}`
+              ? `https://asliddin.identitynull.uz/uploads/${homeData.image}`
               : aslidin
           }
           alt={homeData.title}
