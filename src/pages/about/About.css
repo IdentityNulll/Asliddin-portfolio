@@ -52,6 +52,10 @@
   color: #333;
 }
 
+.edit-pencil {
+  cursor: pointer;
+}
+
 /* Responsive */
 @media (max-width: 900px) {
   .section {

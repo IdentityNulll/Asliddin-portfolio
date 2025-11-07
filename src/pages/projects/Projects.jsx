@@ -69,6 +69,22 @@ export default function Projects() {
     }
   };
 
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this project?"))
+      return;
+
+    try {
+      await api.delete(`/projects/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setProjects((prev) => prev.filter((p) => p._id !== id));
+      alert("Project deleted successfully!");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete project");
+    }
+  };
+
   const getImageUrl = (filename) => `http://localhost:4765${filename}`;
 
   return (
@@ -100,7 +116,11 @@ export default function Projects() {
           >
             <div className="project-img">
               {p.imageUrl && p.imageUrl[0] && (
-                <img src={getImageUrl(p.imageUrl[0])} alt={p.name} loading="lazy" />
+                <img
+                  src={getImageUrl(p.imageUrl[0])}
+                  alt={p.name}
+                  loading="lazy"
+                />
               )}
             </div>
             <div className="project-content">
@@ -115,6 +135,16 @@ export default function Projects() {
                   View Project
                 </motion.button>
               </Link>
+              {isAdmin && (
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="delete-btn"
+                  onClick={() => handleDelete(p._id)}
+                >
+                  Delete
+                </motion.button>
+              )}
             </div>
           </motion.div>
         ))}

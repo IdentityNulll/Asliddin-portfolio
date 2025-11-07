@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Edit2 } from "lucide-react";
+import { ArrowLeft, Edit2, PlusCircle } from "lucide-react";
 import api from "../../api/axios";
 import "./OneProject.css";
 
@@ -9,12 +9,14 @@ export default function OneProject() {
   const { id } = useParams();
   const [project, setProject] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showAddImagesModal, setShowAddImagesModal] = useState(false);
   const [editForm, setEditForm] = useState({
     name: "",
     description: "",
     technologies: "",
     images: [],
   });
+  const [newImages, setNewImages] = useState([]);
 
   const token = localStorage.getItem("token");
   const isAdmin = !!token;
@@ -35,7 +37,7 @@ export default function OneProject() {
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "images") {
-      setEditForm((prev) => ({ ...prev, images: files }));
+      setEditForm((prev) => ({ ...prev, images: Array.from(files) }));
     } else {
       setEditForm((prev) => ({ ...prev, [name]: value }));
     }
@@ -49,9 +51,7 @@ export default function OneProject() {
       formData.append("description", editForm.description);
       formData.append("technologies", editForm.technologies);
 
-      for (let i = 0; i < editForm.images.length; i++) {
-        formData.append("images", editForm.images[i]);
-      }
+      editForm.images.forEach((img) => formData.append("images", img));
 
       const res = await api.put(`/projects/${id}`, formData, {
         headers: {
@@ -69,6 +69,44 @@ export default function OneProject() {
     }
   };
 
+  const handleDeleteImage = async (imgPath) => {
+    if (!window.confirm("Delete this image?")) return;
+    try {
+      const res = await api.delete(`/projects/${id}/image`, {
+        headers: { Authorization: `Bearer ${token}` },
+        data: { imagePath: imgPath },
+      });
+      setProject(res.data.project);
+      alert("Image deleted successfully!");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete image!");
+    }
+  };
+
+  const handleAddImages = async (e) => {
+    e.preventDefault();
+    try {
+      const formData = new FormData();
+      newImages.forEach((img) => formData.append("images", img));
+
+      const res = await api.put(`/projects/${id}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      setProject(res.data);
+      setShowAddImagesModal(false);
+      setNewImages([]);
+      alert("Images added successfully!");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to add images!");
+    }
+  };
+
   const getImageUrl = (filename) => `http://localhost:4765${filename}`;
 
   if (!project) return <p>Loading...</p>;
@@ -80,76 +118,72 @@ export default function OneProject() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
+      {/* Back Button (top-left corner) */}
       <Link to="/projects" className="back-btn">
-        <ArrowLeft /> Back
+        <ArrowLeft size={20} /> <span>Back</span>
       </Link>
 
       <div className="project-header">
-        <motion.h1
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          {project.name}
-        </motion.h1>
+        <h1>{project.name}</h1>
+
         {isAdmin && (
-          <Edit2
-            size={24}
-            className="edit-pencil"
-            onClick={() => {
-              setShowEditModal(true);
-              setEditForm({
-                name: project.name,
-                description: project.description,
-                technologies: project.technologies,
-                images: [],
-              });
-            }}
-          />
+          <div className="action-buttons">
+            <button
+              className="icon-btn edit-btn"
+              onClick={() => {
+                setShowEditModal(true);
+                setEditForm({
+                  name: project.name,
+                  description: project.description,
+                  technologies: project.technologies,
+                  images: [],
+                });
+              }}
+            >
+              <Edit2 size={18} />
+              <span>Edit</span>
+            </button>
+
+            <button
+              className="icon-btn add-btn"
+              onClick={() => setShowAddImagesModal(true)}
+            >
+              <PlusCircle size={18} />
+              <span>Add Images</span>
+            </button>
+          </div>
         )}
       </div>
 
-      <motion.p
-        className="one-project-desc"
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-      >
-        {project.description}
-      </motion.p>
+      <p className="one-project-desc">{project.description}</p>
 
-      {/* --- GALLERY --- */}
+      {/* --- Gallery --- */}
       <div className="project-gallery">
         {project.imageUrl?.map((img, i) => (
-          <motion.div
-            key={i}
-            className="gallery-item"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: i * 0.1 }}
-            viewport={{ once: true }}
-          >
+          <div className="gallery-item" key={i}>
             <img
               src={getImageUrl(img)}
               alt={`${project.name} ${i + 1}`}
               loading="lazy"
             />
-          </motion.div>
+            {isAdmin && (
+              <button
+                className="delete-img-btn"
+                onClick={() => handleDeleteImage(img)}
+              >
+                ✖
+              </button>
+            )}
+          </div>
         ))}
       </div>
 
-      {/* --- TECH STACK --- */}
+      {/* --- Tech Stack --- */}
       <div className="tech-list">
-        {project.technologies?.map((t, i) => (
-          <motion.span
-            key={i}
-            className="tech-item"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ delay: 0.2 + i * 0.1 }}
-          >
-            {t}
-          </motion.span>
+        {project.technologies?.map((tech, i) => (
+          <span key={i} className="tech-item">
+            {tech}
+          </span>
         ))}
       </div>
 
@@ -187,9 +221,48 @@ export default function OneProject() {
                 multiple
                 onChange={handleChange}
               />
+
               <div className="modal-buttons">
-                <button type="submit">Save</button>
-                <button type="button" onClick={() => setShowEditModal(false)}>
+                <button type="submit" className="save-btn">
+                  Save
+                </button>
+                <button
+                  type="button"
+                  className="cancel-btn"
+                  onClick={() => setShowEditModal(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* --- Add Images Modal --- */}
+      {showAddImagesModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Add More Images</h3>
+            <form onSubmit={handleAddImages}>
+              <input
+                type="file"
+                multiple
+                onChange={(e) => setNewImages(Array.from(e.target.files))}
+              />
+
+              <div className="modal-buttons">
+                <button type="submit" className="save-btn">
+                  Upload
+                </button>
+                <button
+                  type="button"
+                  className="cancel-btn"
+                  onClick={() => {
+                    setShowAddImagesModal(false);
+                    setNewImages([]);
+                  }}
+                >
                   Cancel
                 </button>
               </div>

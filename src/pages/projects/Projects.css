@@ -37,6 +37,23 @@
   cursor: pointer;
   transition: 0.2s;
 }
+
+.delete-btn {
+  background-color: #e63946;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s;
+  margin-top: 10px;
+}
+
+.delete-btn:hover {
+  background-color: #d62828;
+}
+
 .create-btn:hover {
   transform: scale(1.1);
 }
@@ -61,6 +78,8 @@
   height: 220px;
   object-fit: cover;
 }
+
+
 
 .project-content {
   padding: 1.5rem;
