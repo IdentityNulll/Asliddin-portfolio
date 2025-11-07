@@ -108,7 +108,7 @@ export default function About() {
       >
         <motion.div className="section-image" variants={fadeIn("left", 0.2)}>
           <img
-            src={`http://localhost:4765/uploads/${aboutData.imageUrl}`}
+            src={`https://asliddin.identitynull.uz/uploads/${aboutData.imageUrl}`}
             alt="About Me"
           />
           {isAdmin && (
