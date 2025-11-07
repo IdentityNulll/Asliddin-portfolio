@@ -1,53 +1,77 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
-import projectImg1 from "../../assets/projects/project.png";
-import projectImg2 from "../../assets/projects/project2.png";
-import projectImg3 from "../../assets/projects/project3.jpg";
+import { ArrowLeft, Edit2 } from "lucide-react";
+import api from "../../api/axios";
 import "./OneProject.css";
 
 export default function OneProject() {
   const { id } = useParams();
+  const [project, setProject] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editForm, setEditForm] = useState({
+    name: "",
+    description: "",
+    technologies: "",
+    images: [],
+  });
 
-  const projects = [
-    {
-      id: "1",
-      title: "Creative Portfolio",
-      description:
-        "A modern, responsive portfolio website built with React and Framer Motion. It features smooth animations, interactive components, and a clean design.",
-      images: [projectImg1, projectImg2, projectImg3],
-      tech: ["React", "Framer Motion", "CSS"],
-    },
-    {
-      id: "2",
-      title: "Task Tracker App",
-      description:
-        "A full-stack MERN app to track and manage daily tasks efficiently. Includes CRUD operations, login system, and persistent storage.",
-      images: [projectImg2, projectImg3, projectImg1],
-      tech: ["MongoDB", "Express", "React", "Node.js"],
-    },
-    {
-      id: "3",
-      title: "Anime API Explorer",
-      description:
-        "A dynamic React app that fetches anime data using the Jikan API, allowing users to explore trending anime, characters, and more.",
-      images: [projectImg3, projectImg2, projectImg1],
-      tech: ["React", "REST API", "Jikan API"],
-    },
-  ];
+  const token = localStorage.getItem("token");
+  const isAdmin = !!token;
 
-  const project = projects.find((p) => p.id === id);
+  const fetchProject = async () => {
+    try {
+      const res = await api.get(`/projects/${id}`);
+      setProject(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-  if (!project)
-    return (
-      <div className="project-not-found">
-        <h2>Project not found 😢</h2>
-        <Link to="/projects" className="back-link">
-          Go Back
-        </Link>
-      </div>
-    );
+  useEffect(() => {
+    fetchProject();
+  }, [id]);
+
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    if (name === "images") {
+      setEditForm((prev) => ({ ...prev, images: files }));
+    } else {
+      setEditForm((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      const formData = new FormData();
+      formData.append("name", editForm.name);
+      formData.append("description", editForm.description);
+      formData.append("technologies", editForm.technologies);
+
+      for (let i = 0; i < editForm.images.length; i++) {
+        formData.append("images", editForm.images[i]);
+      }
+
+      const res = await api.put(`/projects/${id}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      setProject(res.data);
+      setShowEditModal(false);
+      alert("Project updated successfully!");
+    } catch (err) {
+      console.error(err);
+      alert("Update failed!");
+    }
+  };
+
+  const getImageUrl = (filename) => `http://localhost:4765${filename}`;
+
+  if (!project) return <p>Loading...</p>;
 
   return (
     <motion.div
@@ -60,13 +84,30 @@ export default function OneProject() {
         <ArrowLeft /> Back
       </Link>
 
-      <motion.h1
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        {project.title}
-      </motion.h1>
+      <div className="project-header">
+        <motion.h1
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          {project.name}
+        </motion.h1>
+        {isAdmin && (
+          <Edit2
+            size={24}
+            className="edit-pencil"
+            onClick={() => {
+              setShowEditModal(true);
+              setEditForm({
+                name: project.name,
+                description: project.description,
+                technologies: project.technologies,
+                images: [],
+              });
+            }}
+          />
+        )}
+      </div>
 
       <motion.p
         className="one-project-desc"
@@ -79,7 +120,7 @@ export default function OneProject() {
 
       {/* --- GALLERY --- */}
       <div className="project-gallery">
-        {project.images.map((img, i) => (
+        {project.imageUrl?.map((img, i) => (
           <motion.div
             key={i}
             className="gallery-item"
@@ -88,14 +129,18 @@ export default function OneProject() {
             transition={{ duration: 0.5, delay: i * 0.1 }}
             viewport={{ once: true }}
           >
-            <img src={img} alt={`${project.title} ${i + 1}`} loading="lazy" />
+            <img
+              src={getImageUrl(img)}
+              alt={`${project.name} ${i + 1}`}
+              loading="lazy"
+            />
           </motion.div>
         ))}
       </div>
 
       {/* --- TECH STACK --- */}
       <div className="tech-list">
-        {project.tech.map((t, i) => (
+        {project.technologies?.map((t, i) => (
           <motion.span
             key={i}
             className="tech-item"
@@ -107,6 +152,51 @@ export default function OneProject() {
           </motion.span>
         ))}
       </div>
+
+      {/* --- Edit Modal --- */}
+      {showEditModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Edit Project</h3>
+            <form className="edit-form" onSubmit={handleUpdate}>
+              <input
+                type="text"
+                name="name"
+                placeholder="Project Name"
+                value={editForm.name}
+                onChange={handleChange}
+                required
+              />
+              <textarea
+                name="description"
+                placeholder="Description"
+                value={editForm.description}
+                onChange={handleChange}
+                required
+              />
+              <input
+                type="text"
+                name="technologies"
+                placeholder="Technologies (comma separated)"
+                value={editForm.technologies}
+                onChange={handleChange}
+              />
+              <input
+                type="file"
+                name="images"
+                multiple
+                onChange={handleChange}
+              />
+              <div className="modal-buttons">
+                <button type="submit">Save</button>
+                <button type="button" onClick={() => setShowEditModal(false)}>
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </motion.div>
   );
 }
